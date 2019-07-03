@@ -100,47 +100,24 @@
 		<MakeDir Directories="$(InstallersBaseDir)" Condition="!Exists('$(InstallersBaseDir)')"/>  <!-- ./BuildDir -->
 		<RemoveDir Directories="$(AppBuildDir)" />	<!-- ./BuildDir/$(SafeApplicationName) 1.0 Build -->
 		<!-- copy in new stuff -->
-		<PropertyGroup>
-			<RootBinDir>$(RootDir)/output/$(Configuration)</RootBinDir>
-		</PropertyGroup>
 		<ItemGroup>
-			<FilesForDevelopers Include="$(RootBinDir)\TestData\**\*"/>
-			<FilesForDevelopers Include="$(RootBinDir)\**\*Tests.*"/>
-			<FilesForDevelopers Include="$(RootBinDir)\**\*TestApp.*"/>
-			<FilesForDevelopers Include="$(RootBinDir)\**\*TestUtilities.*"/>
-			<FilesForDevelopers Include="$(RootBinDir)\RepositoryUtility.*"/>
-			<FilesInstalledByChorusMerge Include="$(RootBinDir)\Autofac.dll;
-				$(RootBinDir)\LibChorus.dll;
-				$(RootBinDir)\Chorus.exe;
-				$(RootBinDir)\ChorusMerge.exe;
-				$(RootBinDir)\Vulcan.Uczniowie.HelpProvider.dll;
-				$(RootBinDir)\icu.net.dll;
-				$(RootBinDir)\icudt54.dll;
-				$(RootBinDir)\icuin54.dll;
-				$(RootBinDir)\icuuc54.dll;
-				$(RootBinDir)\SIL.Core.dll;
-				$(RootBinDir)\SIL.Lift.dll;
-				$(RootBinDir)\SIL.Windows.Forms.dll"/>
-			<BinFiles Include="$(RootBinDir)\**\*" Exclude="@(FilesForDevelopers);@(FilesInstalledByChorusMerge)"/>
-			<BinFiles Include="$(RootDir)/output/Installer/License.htm"/>
-			<DataFiles Include="$(RootDir)/output/Installer/License.htm"/> <!-- REVIEW (Hasso) 2017.12: we don't need to install "data files" -->
-			<InstallerResources Include="$(RootDir)/output/Installer/License.htm"/>
-			<InstallerResources Include="$(RootDir)\DistFiles\App.ico"/>
-			<InstallerResources Include="$(RootDir)\DistFiles\Installer.ico"/>
-			<OverrideFiles Include="$(RootDir)/src/InstallerOverrides/*.wxi"/>
+			<BinFiles Include="$(RootDir)/output/$(Configuration)\**\*" Exclude="$(RootDir)/output/$(Configuration)\TestData\**\*"/>
+			<DataFiles Include="$(RootDir)/output/Installer/License.htm"/>
+			<TemplateFiles Include="$(RootDir)/output/Installer/License.htm"/>
+			<OverrideFiles Include="$(RootDir)/src/InstallerOverrides/Overrides.wxi"/> <!-- specifying, because others may go elsewhere -->
 		</ItemGroup>
 		<Copy SourceFiles="@(BinFiles)" OverwriteReadonlyFiles="true" DestinationFolder="$(AppBuildDir)/$(BinDirSuffix)/%(RecursiveDir)"/>
 		<Copy SourceFiles="@(DataFiles)" OverwriteReadonlyFiles="true" DestinationFolder="$(AppBuildDir)/$(DataDirSuffix)%(RecursiveDir)"/>
-		<Copy SourceFiles="@(InstallerResources)" OverwriteReadonlyFiles="true" DestinationFolder="$(RootDir)/src/WiXInstaller/resources"/>
+		<Copy SourceFiles="@(TemplateFiles)" OverwriteReadonlyFiles="true" DestinationFolder="$(RootDir)/src/WiXInstaller/BaseInstallerBuild"/>
 		<Copy SourceFiles="@(OverrideFiles)" OverwriteReadonlyFiles="true" DestinationFolder="$(RootDir)/src/WiXInstaller/Common"/>
-		<WriteLinesToFile File="$(AppBuildDir)/version" Lines="$(BuildVersion)"/>
 	</Target>
 
 	<Target Name="CopyBuildToMaster" DependsOnTargets="InstallerVersionNumbers">
 		<ItemGroup>
-			<ObjectFiles Include="$(AppBuildDir)/**/*"/>
+			<ObjectFiles Include="$(AppBuildDir)/objects/**/*"/>
 		</ItemGroup>
-		<Copy SourceFiles="@(ObjectFiles)" DestinationFolder="$(AppBuildMasterDir)/%(RecursiveDir)"/>
+		<Copy SourceFiles="@(ObjectFiles)" DestinationFolder="$(AppBuildMasterDir)/objects/%(RecursiveDir)"/>
+		<WriteLinesToFile File="$(AppBuildMasterDir)/version" Lines="$(BuildVersion)"/>
 	</Target>
 
 	<Target Name="GetDotNetFiles" >
@@ -209,10 +186,6 @@
 			<InstallerFiles Include="$(BaseBuildDir)/**/$(SafeApplicationName)_*.msi"/>
 		</ItemGroup>
 		<Move SourceFiles="@(InstallerFiles)" DestinationFolder="$(InstallersBaseDir)"/>
-		<!-- The FieldWorks installer wants a stable installer name -->
-		<Move SourceFiles="$(InstallersBaseDir)/$(SafeApplicationName)_$(BuildVersion)_Offline.exe" DestinationFiles="$(InstallersBaseDir)/$(SafeApplicationName)_Offline.exe"/>
-		<Move SourceFiles="$(InstallersBaseDir)/$(SafeApplicationName)_$(BuildVersion)_Online.exe" DestinationFiles="$(InstallersBaseDir)/$(SafeApplicationName)_Online.exe"/>
-		<Move SourceFiles="$(InstallersBaseDir)/$(SafeApplicationName)_$(BuildVersion).msi" DestinationFiles="$(InstallersBaseDir)/$(SafeApplicationName).msi"/>
 	</Target>
 
 	<Target Name="BuildProductPatchMsp" DependsOnTargets="InstallerVersionNumbers">
