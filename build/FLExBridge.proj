@@ -237,8 +237,8 @@
 	<!-- *********************** Installer stuff below.  ******************************* -->
 
 	<!-- For building an an installer on TeamCity (use TestInstallerBuild.bat to run locally) -->
-	<Target Name="Installer" DependsOnTargets="VersionNumbers; BuildRelease; Test" Condition="'$(OS)'=='Windows_NT'"/>
-	<Target Name="Patcher" DependsOnTargets="VersionNumbers; BuildPatch; Test" Condition="'$(OS)'=='Windows_NT'"/>
+	<Target Name="Installer" DependsOnTargets="VersionNumbers; BuildRelease; " Condition="'$(OS)'=='Windows_NT'"/>
+	<Target Name="Patcher" DependsOnTargets="VersionNumbers; BuildPatch; " Condition="'$(OS)'=='Windows_NT'"/>
 
 	<!-- update the AssemblyInfo files for linux packaging -->
 	<Target Name="UpdateAssemblyInfoForPackage">
