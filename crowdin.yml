@@ -1,0 +1,3 @@
+files:
+  - source: /DistFiles/localizations/*.en.tmx
+    translation: /DistFiles/localizations/%file_name%.%two_letters_code%.tmx
