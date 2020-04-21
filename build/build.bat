@@ -11,8 +11,12 @@ for /f "usebackq delims=" %%i in (`vswhere -latest -requires Microsoft.Component
 call "%InstallDir%\VC\Auxiliary\Build\vcvars32.bat"
 
 :Build
-pushd ..\l10n
+pushd .
 (
+	dotnet tool restore
+	dotnet paket restore
+) && (
+	cd ..\l10n
 	MSBuild l10n.proj /t:restore
 ) && (
 	MSBuild l10n.proj /t:CopyL10nsToDistFiles

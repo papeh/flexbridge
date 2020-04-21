@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props" Condition="Exists('..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,8 +9,6 @@
     <AssemblyName>LibTriboroughBridge-ChorusPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <UpdateAssemblyInfo Condition="'$(UpdateAssemblyInfo)' == ''">true</UpdateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -137,25 +134,17 @@
     <Compile Include="Infrastructure\ActualCloneResult.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
   <ItemGroup>
     <None Include="..\..\lib\common\chorusmerge" Condition="'$(OS)'!='Windows_NT'">
       <Link>chorusmerge</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props'))" />
-    <Error Condition="!Exists('..\..\packages\GitVersionTask.alt.4.0.2-alpha-0006\build\GitVersionTask.alt.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.alt.4.0.2-alpha-0006\build\GitVersionTask.alt.targets'))" />
-  </Target>
   <!-- a few do-nothing targets to get rid of some warnings from GitVersionTask.targets. We get
     these warnings because this project doesn't yet use the new .csproj format. -->
   <Target Name="GetAssemblyVersion" />
@@ -168,5 +157,5 @@
   <ItemGroup Condition="!$(UpdateAssemblyInfo)">
     <Compile Include="Properties/GitVersionTaskAssemblyInfo.g.cs" />
   </ItemGroup>
-  <Import Project="..\..\packages\GitVersionTask.alt.4.0.2-alpha-0006\build\GitVersionTask.alt.targets" Condition="Exists('..\..\packages\GitVersionTask.alt.4.0.2-alpha-0006\build\GitVersionTask.alt.targets')" />
+  <Import Project="..\..\.paket\paket.targets" />
 </Project>
